@@ -24,15 +24,17 @@ How did I come up with the idea? [MUST READ!](https://github.com/abdibrokhim/CoM
 soon...
 
 ### External Links
-* Read more about me [click](https://abdibrokhim.vercel.app/about )
+* Read more about me [click](https://abdibrokhim.vercel.app/about)
+
+* Business plan [click](https://docs.google.com/document/d/14TLvDCRngngKVOAUVtyN1rM72EuXAzRddkghH7VxSUs/edit?usp=sharing)
 
 * Here is App screenshots [click](https://drive.google.com/drive/folders/1kGS9eK2R-pjRluigFqNDTp_uoo09MNmG?usp=sharing)
 
-* Here is presentation slides [click]() 
+* Here is presentation slides [click](https://docs.google.com/document/d/1BUTYwI5xuNIV0FWmmQNmMErs6XXK30kDKoojktSwoJU/edit?usp=sharing) 
 
 * Here is pitch video on YouTube [click](https://youtu.be/769mUZFG3Ag)
 
-* Live Demo from Founder [click]() 
+* Live Demo from Founder [click](https://drive.google.com/file/d/1SLdkSl7yR-agug86J13cpvEn3Mrn6cC1/view?usp=sharing) 
 
 * Live Demo from Founder on YouTube [click]()
 
@@ -40,7 +42,7 @@ soon...
 
 * Check the official Github repository for a detailed overview of MeWellAI [click](https://github.com/abdibrokhim/CoMedAI-App/blob/main/README.md)
 
-* Download APK [click]()
+* Download APK [click](https://docs.google.com/document/d/14oVkMf3fzjG3X07ATD1yB6dZhXxcEdBgYX2bJlXu84U/edit?usp=sharing)
 
 ### What's next? 
 
@@ -100,7 +102,7 @@ soon...
 ### What's next? 
 soon...
 
-### How MeWellAI may benefit humanity (YOU)? 💫
+### How CoMedAI may benefit humanity (YOU)? 💫
 - soon...
 
 Better check the presentation [click]()
@@ -112,7 +114,7 @@ Read the full story [click](https://github.com/abdibrokhim/CoMedAI-App/blob/main
 ## Extra Extra info 👀
 
 ### Download APK 📱
-Download the latest APK from [here]()
+Download the latest APK from [here](https://docs.google.com/document/d/14oVkMf3fzjG3X07ATD1yB6dZhXxcEdBgYX2bJlXu84U/edit?usp=sharing)
 
 ### API Backend Services ✅
 
