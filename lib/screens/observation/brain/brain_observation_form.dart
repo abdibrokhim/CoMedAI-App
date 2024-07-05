@@ -24,18 +24,18 @@ class BrainObservationForm extends StatefulWidget {
 }
 
 class _BrainObservationFormState extends State<BrainObservationForm> {
-  final BrainObservationModel observation = BrainObservationModel();
-  final TextEditingController radiologistNameController = TextEditingController();
-  final TextEditingController newPatientNameController = TextEditingController();
-  final TextEditingController birthYearController = TextEditingController();
+  BrainObservationModel observation = BrainObservationModel();
+  TextEditingController radiologistNameController = TextEditingController();
+  TextEditingController newPatientNameController = TextEditingController();
+  TextEditingController birthYearController = TextEditingController();
 
   List<String> errors = [];
 
   @override
   void initState() {
+    initErrors();
     super.initState();
 
-    initErrors();
   }
 
 
@@ -263,6 +263,65 @@ if (errors.isNotEmpty) {  // remove '!' in production
 }
   }
 
+  // on simulate pre fill the form with template data
+  void _reInitializeMainForm() {
+    setState(() {
+      observation = BrainObservationModel();
+      radiologistNameController = TextEditingController();
+      newPatientNameController = TextEditingController();
+      birthYearController = TextEditingController();
+      initErrors();
+    });
+  }
+
+  bool isFillingOut = false;
+
+void _onSimulate() {
+  // Sample observation string for testing purposes
+  setState(() {
+    isFillingOut = true;
+  });
+
+setState(() {
+    observation.scanningTechnique = "T1 FSE-sagital, T2 FLAIR, T2 FSE-axial, T2 FSE-coronar, DWI";
+    observation.minFocusDiameter = 3;
+    observation.maxFocusDiameter = 10;
+    observation.basalGangliaLocation = "usually located, symmetrical";
+    observation.basalGangliaSymmetry = "symmetrical";
+    observation.basalGangliaContour = "clear, even";
+    observation.basalGangliaDimensions = "dimensions not changed";
+    observation.basalGangliaSignal = "MR signal unchanged";
+    observation.lateralVentriclesSymmetry = "symmetrical";
+    observation.lateralVentriclesWidthRight = 10;
+    observation.lateralVentriclesWidthLeft = 14;
+    observation.thirdVentricleWidth = 4;
+    observation.sylvianAqueductCondition = "not changed";
+    observation.fourthVentricleCondition = "tent-shaped, not dilated";
+    observation.cerebralLongitudinalFissureLocation = "centrally located";
+    observation.convexitalGroovesCondition = "moderately widened in frontotemporal regions";
+    observation.corpusCallosumCondition = "normal shape and size";
+    observation.brainStemCondition = "without areas of pathological intensity";
+    observation.cerebellumCondition = "normal shape";
+    observation.cerebellarCortexWidthCondition = "width reduced due to atrophy";
+    observation.craniovertebralJunctionCondition = "unchanged";
+    observation.pituitaryGlandCondition = "moderately flattened";
+    observation.pituitaryGlandHeight = 3;
+    observation.orbitalConesShape = "unchanged";
+    observation.eyeballsShapeSize = "spherical and of normal size";
+    observation.opticNervesDiameter = 0;
+    observation.perineuralSubarachnoidSpaceCondition = "moderately diffusely dilated";
+    observation.extraocularMusclesCondition = "normal size, without pathological signals";
+    observation.retrobulbarFattyTissueCondition = "without pathological signals";
+    observation.sinusesCystsPresence = true;
+    observation.sinusesCystsSize = 14;
+    observation.sinusesPneumatization = "remaining paranasal sinuses usually pneumatized";
+    observation.additionalObservations = "Multiple round-shaped foci of pathological intensity in subcortical and periventricular white matter of cerebral hemispheres, asymmetrically determined, with unclear contours, homogeneous hyperintense signal on T2 VI and T2 FLAIR, diameters ranging from 3-10 mm. Prevestocochlear nerve clearly differentiated on both sides. Pneumatization of mastoid processes preserved.";
+});
+
+setState(() {
+  isFillingOut = false;
+});
+  }
 
   void showSubmitBottomSheet(BuildContext context) {
 
@@ -291,13 +350,17 @@ if (errors.isNotEmpty) {  // remove '!' in production
             Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
+      Expanded(
+      child:
       Text(
                               'Save observation and conclusion',
+                              maxLines: 2,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                               ),
+                            ),
                             ),
       Container(
         alignment: Alignment.center,
@@ -310,6 +373,7 @@ if (errors.isNotEmpty) {  // remove '!' in production
         child: IconButton(
           onPressed: () {
             store.dispatch(ReinitializeFormAction());
+            _reInitializeMainForm();
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.close, color: Colors.black, size: 18,),
@@ -393,6 +457,11 @@ userState.conclusion.isNotEmpty ?
   );
 }
 
+void _reInitializeAddPatientForm() {
+  newPatientNameController = TextEditingController();
+  birthYearController = TextEditingController();
+}
+
   void showAddNewPatientBottomSheet(BuildContext context) {
 
   showModalBottomSheet(
@@ -402,6 +471,7 @@ userState.conclusion.isNotEmpty ?
       return 
       StoreConnector<GlobalState, UserState>(
       onInit: (store) {
+        _reInitializeAddPatientForm();
       },
       converter: (appState) => appState.state.appState.userState,
       builder: (context, userState) {
@@ -479,6 +549,11 @@ if (errors.isNotEmpty) {
                 StoreProvider.of<GlobalState>(context).dispatch(
                   SaveNewPatientAction(newPatientNameController.text, birthYearController.text),
                 );
+                StoreProvider.of<GlobalState>(context).dispatch(
+                  FetchAllPatientNamesAction(),
+                );
+                Navigator.of(context).pop();
+                
 }
   },
   style: ElevatedButton.styleFrom(
@@ -521,6 +596,7 @@ if (errors.isNotEmpty) {
 }
 
   void _submitForm() {
+    Navigator.of(context).pop();
 
 
     print('submitting form');
@@ -589,7 +665,8 @@ if (errors.isNotEmpty) {
     return 
     StoreConnector<GlobalState, UserState>(
       onInit: (store) {
-        store.dispatch(FetchAllPatientNamesAction());
+        _reInitializeMainForm();
+        // store.dispatch(FetchAllPatientNamesAction());
       },
       converter: (appState) => appState.state.appState.userState,
       builder: (context, userState) {
@@ -624,7 +701,6 @@ if (errors.isNotEmpty) {
               child: 
       CustomDropdownWithSearch( 
         labelText: "Select or add patient",
-          items: userState.patientNames,
           itemName: 'Select',
           dState: 0,
           isAddNewPatient: true,
@@ -1031,8 +1107,47 @@ CustomTextFormField(
       ),
     ),
   ),
-  child: Text(
+  child: isFillingOut ? 
+      CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF232428)), // Change the progress color
+    backgroundColor: Color(0xFFC3C3C3), // Change the background color
+  ) :
+  Text(
     'Generate'
+  ),
+),
+),
+          const SizedBox(height: 32.0),
+                          SizedBox(
+                  width: double.infinity,
+                  child:
+          ElevatedButton(
+  onPressed: _onSimulate,
+  style: ElevatedButton.styleFrom(
+    // elevation: 5,
+    surfaceTintColor: Colors.transparent,
+    backgroundColor: Colors.transparent,
+    foregroundColor: Colors.white, // Set the text color (applies to foreground)
+    textStyle: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w700, 
+    ),
+    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 40), // Set the padding
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(5)), // Set the border radius
+      side: BorderSide(
+        color: Colors.white,
+        width: 2,
+      ),
+    ),
+  ),
+  child: isFillingOut ? 
+      CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF232428)), // Change the progress color
+    backgroundColor: Color(0xFFC3C3C3), // Change the background color
+  ) :
+  Text(
+    'Simulate'
   ),
 ),
 ),

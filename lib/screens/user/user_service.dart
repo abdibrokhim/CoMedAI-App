@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:brainmri/auth/components/secure_storage.dart';
+import 'package:brainmri/models/chat_messages_model.dart';
 import 'package:brainmri/screens/profile/organization_model.dart';
 import 'package:brainmri/utils/constants.dart';
 import 'package:brainmri/utils/shared.dart';
@@ -21,7 +22,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
@@ -448,30 +449,78 @@ class UserService {
   }
 
 
+  // static Future<String> gpt(String observation) async {
+  //   String language = 'English';
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('${Environments.backendServiceBaseUrl}/api/gpt-fine-tuned/conclusion'),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: json.encode({'query': observation, 'language': language}),
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final dynamic data = json.decode(response.body);
+  //       print('Generated conclusion (GPT ): $data');
+  //       String conclusion = data;
+  //       return conclusion;
+  //     } else {
+  //       return Future.error('Failed to generate conclusion (GPT)');
+  //     }
+  //   } catch (e) {
+  //     showToast(message: 'An error has occured', bgColor: getColor(AppColors.error));
+  //     AppLog.log().e('Failed to generate conclusion (GPT ): $e');
+  //     return Future.error('Failed to generate conclusion (GPT )');
+  //   }
+  // }
+
   static Future<String> gpt(String observation) async {
-    String language = 'English';
-    try {
-      final response = await http.post(
-        Uri.parse('${Environments.backendServiceBaseUrl}/api/gpt-fine-tuned/conclusion'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({'query': observation, 'language': language}),
-      );
-      if (response.statusCode == 200) {
-        final dynamic data = json.decode(response.body);
-        print('Generated conclusion (GPT ): $data');
-        String conclusion = data;
-        return conclusion;
+    
+    List<ChatMessageModel> messages = getChatMessagesPrompt(observation);
+
+  try {
+
+    final payload = {
+      'model': "ft:gpt-3.5-turbo-0125:abdibrokhim:brainmri-0904:9BzUvHoA",
+      'messages': messages,
+    };
+
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer sk-proj-Nf1LYmK4GccUdnhq1ds6T3BlbkFJhCOAwysBHBGT7QKSXZl1',
+      },
+      body: json.encode(payload),
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(response.body);
+      print('Generated (GPT): $data');
+
+      if (data is Map<String, dynamic> && data.containsKey('choices')) {
+        final choices = data['choices'] as List<dynamic>;
+        if (choices.isNotEmpty && choices[0] is Map<String, dynamic>) {
+          final responseText = choices[0]['message']['content'] as String;
+          return responseText;
+        } else {
+          showToast(message: 'An error has occurred. Please try again later.', bgColor: getColor(AppColors.error));
+          return Future.error('Failed to generate (GPT): Invalid response format');
+        }
       } else {
-        return Future.error('Failed to generate conclusion (GPT)');
+        showToast(message: 'An error has occurred. Please try again later.', bgColor: getColor(AppColors.error));
+        return Future.error('Failed to generate (GPT): Invalid response format');
       }
-    } catch (e) {
-      showToast(message: 'An error has occured', bgColor: getColor(AppColors.error));
-      AppLog.log().e('Failed to generate conclusion (GPT ): $e');
-      return Future.error('Failed to generate conclusion (GPT )');
+    } else {
+      showToast(message: 'An error has occurred. Please try again later.', bgColor: getColor(AppColors.error));
+      return Future.error('Failed to generate (GPT)');
     }
+  } catch (e) {
+    showToast(message: 'An error has occurred. Please try again later.', bgColor: getColor(AppColors.error));
+    print('Failed to generate (GPT): $e');
+    return Future.error('Failed to generate (GPT)');
   }
+}
 
   static String _formatDate(DateTime date) {
     // 12/12/2023
@@ -745,7 +794,7 @@ static Future<Directory?> _getDownloadDirectory() async {
       print('File downloaded to: $filePath');
 
       // Open the file (optional)
-      await OpenFile.open(filePath);
+      await OpenFilex.open(filePath);
     } catch (e) {
       print('Error while downloading file: $e');
       throw Exception('Error while downloading file: $e');

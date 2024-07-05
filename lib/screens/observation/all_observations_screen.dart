@@ -26,13 +26,13 @@ class _AllObservationsScreenState extends State<AllObservationsScreen> {
 
   @override
   void initState() {
-    super.initState();
-    print('init state');
 
+    print('init state');
     // Initialize filteredPatients in initState
     // WidgetsBinding.instance.addPostFrameCallback((_) {
       // StoreProvider.of<GlobalState>(context).dispatch(FetchAllPatients());
     // });
+    super.initState();
   }
 
   void reFetchData()  {

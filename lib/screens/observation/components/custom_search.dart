@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomSearchInput extends StatefulWidget {
   final Function(String) onSearchChanged;
+  final bool readOnly;
 
-  const CustomSearchInput({Key? key, required this.onSearchChanged})
+  const CustomSearchInput({
+    Key? key, 
+    this.readOnly = false,
+    required this.onSearchChanged
+  })
       : super(key: key);
 
   @override
@@ -15,10 +20,10 @@ class _CustomSearchInputState extends State<CustomSearchInput> {
 
   @override
   void initState() {
-    super.initState();
     searchController.addListener(() {
       widget.onSearchChanged(searchController.text);
     });
+    super.initState();
   }
 
   @override
@@ -33,6 +38,7 @@ class _CustomSearchInputState extends State<CustomSearchInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          readOnly: widget.readOnly,
           cursorColor: Colors.black,
           controller: searchController,
           style: const TextStyle(

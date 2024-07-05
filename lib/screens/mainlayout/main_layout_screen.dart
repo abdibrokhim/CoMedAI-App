@@ -1,3 +1,4 @@
+import 'package:brainmri/screens/user/user_reducer.dart';
 import 'package:brainmri/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,6 +36,7 @@ class _MainLayoutState extends State<MainLayout> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         surfaceTintColor: const Color.fromARGB(255, 23, 24, 28),
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(_tabTitles[_selectedIndex],
@@ -137,6 +139,7 @@ DrawerHeader(
             _selectedIndex = 2;
           });
           Navigator.pop(context);
+          store.dispatch(FetchOrganizationAction());
         },
         tileColor: _selectedIndex == 2 ? const Color.fromARGB(255, 23, 24, 28) : null, // Added blue color on select
       ),

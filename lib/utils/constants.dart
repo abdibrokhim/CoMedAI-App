@@ -58,3 +58,6 @@ Color inputFieldColor = Color(0xC3C3C3);
 Color errorInputFieldColor = Color(0xFFFFCBCB);
 Color mentionInputFieldColor = Color(0xFFFFEDCB);
 Color infoInputFieldColor = Color(0xFFCBF3FF);
+
+
+String modelId = "ft:gpt-3.5-turbo-0125:abdibrokhim:brainmri-0904:9BzUvHoA";

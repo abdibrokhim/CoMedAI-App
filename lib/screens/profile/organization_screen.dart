@@ -211,7 +211,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
       final state = StoreProvider.of<GlobalState>(context).state;
 
-          final String photoUrl = defaultProfileImage;
+      String photoUrl = user.photoURL ?? defaultProfileImage;
     final String email = user.email!;
 
     void updateValues() {
@@ -219,9 +219,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         print('Updating values...');
         print('user.photoURL: ${user.photoURL}');
         
-        // if (user.photoURL != null) {
-        //   photoUrl = user.photoURL!;
-        // } 
+        if (user.photoURL != null) {
+          photoUrl = user.photoURL!;
+        } 
         if (state.appState.userState.organization!.name != null) {
           displayName = state.appState.userState.organization!.name!;
         }
@@ -275,14 +275,18 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 StoreConnector<GlobalState, UserState>(
   onInit: (store) {
     print('Fetching organization...');
+
     store.dispatch(FetchOrganizationAction());
-    print('FetchOrganizationAction orgId: ${store.state.appState.userState.organization!.id!}');
-    print('Details...');
-    print('store.state.appState.userState.organization!.name: ${store.state.appState.userState.organization!.name}');
-    print('store.state.appState.userState.organization!.email: ${store.state.appState.userState.organization!.email}');
-    print('store.state.appState.userState.organization!.fullName: ${store.state.appState.userState.organization!.fullName}');
-    print('store.state.appState.userState.organization!.phoneNumber: ${store.state.appState.userState.organization!.phoneNumber}');
-    print('store.state.appState.userState.organization!.fullAddress: ${store.state.appState.userState.organization!.fullAddress}');
+
+    if (store.state.appState.userState.organization != null) {
+      print('FetchOrganizationAction orgId: ${store.state.appState.userState.organization!.id!}');
+      print('Details...');
+      print('store.state.appState.userState.organization!.name: ${store.state.appState.userState.organization!.name}');
+      print('store.state.appState.userState.organization!.email: ${store.state.appState.userState.organization!.email}');
+      print('store.state.appState.userState.organization!.fullName: ${store.state.appState.userState.organization!.fullName}');
+      print('store.state.appState.userState.organization!.phoneNumber: ${store.state.appState.userState.organization!.phoneNumber}');
+      print('store.state.appState.userState.organization!.fullAddress: ${store.state.appState.userState.organization!.fullAddress}');
+    }
 
         if (state.appState.userState.organization!.name != null) {
           displayName = state.appState.userState.organization!.name!;

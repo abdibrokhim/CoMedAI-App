@@ -7,7 +7,6 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 
 class CustomDropdownWithSearch extends StatefulWidget {
-  final List<Map<String, String>> items;
   final String itemName;
   final int dState;
   final String labelText;
@@ -16,7 +15,6 @@ class CustomDropdownWithSearch extends StatefulWidget {
 
   const CustomDropdownWithSearch({
     Key? key,
-    required this.items,
     required this.itemName,
     required this.dState,
     required this.labelText,
@@ -30,6 +28,9 @@ class CustomDropdownWithSearch extends StatefulWidget {
 
 class _CustomDropdownWithSearchState extends State<CustomDropdownWithSearch> {
   TextEditingController searchController = TextEditingController();
+  List<String> filteredData = []; // = widget.items.map((e) => e['name']!).toList();
+
+  List<Map<String, String>> types = [{'name': 'Brain', 'id': '1'},];
 
   @override
   void initState() {
@@ -46,7 +47,15 @@ class _CustomDropdownWithSearchState extends State<CustomDropdownWithSearch> {
           print('refetching');
           if (widget.dState == 0) {
 
-      store.dispatch(FetchAllPatientNamesAction());
+      StoreProvider.of<GlobalState>(context).dispatch(FetchAllPatientNamesAction());
+      final List<Map<String, String>> data = StoreProvider.of<GlobalState>(context).state.appState.userState.patientNames;
+      setState(() {
+        filteredData = data.map((e) => e['name']!).toList();
+      });
+          } else {
+            setState(() {
+              filteredData = types.map((e) => e['name']!).toList();
+            });
           }
 
   }
@@ -68,12 +77,30 @@ class _CustomDropdownWithSearchState extends State<CustomDropdownWithSearch> {
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     _refreshController.loadComplete();
   }
+
+    void updateFilteredList(String filter) {
+      final List<Map<String, String>> data = StoreProvider.of<GlobalState>(context).state.appState.userState.patientNames;
+    setState(() {
+                      filteredData = (data.map((e) => e['name']!).toList() ?? []).where((item) {
+                  final nameLower = item.toLowerCase();
+                  final filterLower = filter.toLowerCase();
+                  return nameLower.contains(filterLower);
+                }).toList();
+    });
+  }
   
   Map<String, String> selected = {};
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<GlobalState, UserState>(
+        onInit: (store) async {
+        store.dispatch(FetchAllPatientNamesAction());
+        final List<Map<String, String>> data = StoreProvider.of<GlobalState>(context).state.appState.userState.patientNames;
+        setState(() {
+          filteredData = data.map((e) => e['name']!).toList();
+        });
+      },
       converter: (appState) => appState.state.appState.userState,
       builder: (context, userState) {
         return GestureDetector(
@@ -121,7 +148,6 @@ class _CustomDropdownWithSearchState extends State<CustomDropdownWithSearch> {
   }
 
   void _showItemsList(BuildContext context) {
-  List<String> filteredItems = widget.items.map((e) => e['name']!).toList();
 
   showModalBottomSheet(
     isScrollControlled: true,
@@ -194,8 +220,15 @@ TextFormField(
 suffixIcon: searchController.text.isNotEmpty
                     ? IconButton(
                         onPressed: () {
+                          List<Map<String, String>> data = [{}];
+                          if (widget.dState == 0) {
+                              StoreProvider.of<GlobalState>(context).dispatch(FetchAllPatientNamesAction());
+                              data = StoreProvider.of<GlobalState>(context).state.appState.userState.patientNames;
+                          } else {
+                              data = types;
+                          }
                           searchController.clear();
-                          filteredItems = widget.items.map((e) => e['name']!).toList();
+                          filteredData = data.map((e) => e['name']!).toList();
                           (context as Element).markNeedsBuild();
                           setState(() {
                             selected = {};
@@ -209,11 +242,7 @@ suffixIcon: searchController.text.isNotEmpty
                     : null,
               ),
                         onChanged: (String value) {
-                filteredItems = (widget.items.map((e) => e['name']!).toList() ?? []).where((item) {
-                  final itemLower = item.toLowerCase();
-                  final searchLower = value.toLowerCase();
-                  return itemLower.contains(searchLower);
-                }).toList();
+                          updateFilteredList(value);
                 (context as Element).markNeedsBuild();
               },
         ),
@@ -281,9 +310,9 @@ suffixIcon: searchController.text.isNotEmpty
             onLoading: _onLoading,
             child: 
               ListView.builder(
-                itemCount: filteredItems.length,
+                itemCount: filteredData.length,
                 itemBuilder: (context, index) {
-                  final item = filteredItems[index];
+                  final item = filteredData[index];
                   return 
                   ListTile(
                     title: Text(
@@ -296,9 +325,16 @@ suffixIcon: searchController.text.isNotEmpty
                     onTap: () {
                       Navigator.of(context).pop();
                       setState(() {
+                        List<Map<String, String>> data = [{}];
+                          if (widget.dState == 0) {
+                              StoreProvider.of<GlobalState>(context).dispatch(FetchAllPatientNamesAction());
+                              data = StoreProvider.of<GlobalState>(context).state.appState.userState.patientNames;
+                          } else {
+                              data = types;
+                          }
                         searchController.text = item;
                         selected = {
-                          'id': widget.items.firstWhere((element) => element['name'] == item)['id']!,
+                          'id': data.firstWhere((element) => element['name'] == item)['id']!,
                           'name': item
                         };
                         if (widget.dState == 0) {

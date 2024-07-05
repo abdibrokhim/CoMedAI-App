@@ -27,9 +27,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void initState() {
-    super.initState();
 
     initErrors();
+    
+    super.initState();
   }
 
 
@@ -87,6 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 31, 33, 38),
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {

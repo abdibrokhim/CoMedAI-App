@@ -17,10 +17,6 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 
 class ObservationsScreen extends StatefulWidget {
-  // final String pId;
-  // final List<ObservationModel> observations;
-
-  // required this.pId, required this.observations
   const ObservationsScreen({Key? key, 
   }) : super(key: key);
 
@@ -29,7 +25,6 @@ class ObservationsScreen extends StatefulWidget {
 }
 
 class _ObservationsScreenState extends State<ObservationsScreen> {
-  late List<ObservationModel> observations;
   List<ObservationModel> filteredObservations = [];
   String labelText = "Brain MRI";
 
@@ -38,38 +33,33 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
   @override
   void initState() {
     super.initState();
-    // observations = widget.observations;
-    // filteredObservations = widget.observations;
-    observations = store.state.appState.userState.patientsAllObservations!.observations!;
-    filteredObservations = store.state.appState.userState.patientsAllObservations!.observations!;
-  }
-
-  void update() {
-    observations = store.state.appState.userState.patientsAllObservations!.observations!;
-    filteredObservations = store.state.appState.userState.patientsAllObservations!.observations!;
   }
 
   void reFetchData()  {
-      StoreProvider.of<GlobalState>(context).dispatch(FetchPatientAllObservations(store.state.appState.userState.patientsAllObservations!.id!));
-      print('ObservationsScreen store.state.appState.userState.patientsAllObservations!.id!, ${store.state.appState.userState.patientsAllObservations!.id!}');
-      update();
+            if (store.state.appState.userState.patientsAllObservations != null) {
+          if (store.state.appState.userState.patientsAllObservations!.observations != null) {
+
+                print('store.state.appState.userState.patientsAllObservations!.id!: ${store.state.appState.userState.patientsAllObservations!.id!}');
+                StoreProvider.of<GlobalState>(context).dispatch(FetchPatientAllObservations(store.state.appState.userState.patientsAllObservations!.id!));
+                print('ObservationsScreen onInit store.state.appState.userState.patientsAllObservations!.id!, ${store.state.appState.userState.patientsAllObservations!.id!}');
+setState(() {
+              filteredObservations = store.state.appState.userState.patientsAllObservations!.observations!;
+});
+          }
+        }
   }
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
-    // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
     reFetchData();
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async{
-    // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
     _refreshController.loadComplete();
   }
 
@@ -79,7 +69,7 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
 
   void updateFilteredObservations(String filter) {
     setState(() {
-      filteredObservations = observations.where((observation) {
+      filteredObservations = store.state.appState.userState.patientsAllObservations!.observations!.where((observation) {
         final observationDateStr = formatDate(DateTime.parse(observation.observedAt!.toString())).toLowerCase();
         final radiologistNameLower = observation.radiologistName!.toLowerCase();
         final labelTextLower = labelText.toLowerCase();
@@ -101,6 +91,7 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 31, 33, 38),
       appBar: AppBar(
+        centerTitle: true,
         surfaceTintColor: const Color.fromARGB(255, 23, 24, 28),
         backgroundColor: const Color.fromARGB(255, 23, 24, 28),
         title: const Text(
@@ -124,8 +115,15 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
 
       StoreConnector<GlobalState, UserState>(
       onInit: (store) {
-        store.dispatch(FetchPatientAllObservations(store.state.appState.userState.patientsAllObservations!.id!));
-        print('ObservationsScreen onInit store.state.appState.userState.patientsAllObservations!.id!, ${store.state.appState.userState.patientsAllObservations!.id!}');
+        if (store.state.appState.userState.patientsAllObservations != null) {
+          if (store.state.appState.userState.patientsAllObservations!.observations != null) {
+
+                print('store.state.appState.userState.patientsAllObservations!.id!: ${store.state.appState.userState.patientsAllObservations!.id!}');
+                store.dispatch(FetchPatientAllObservations(store.state.appState.userState.patientsAllObservations!.id!));
+                print('ObservationsScreen onInit store.state.appState.userState.patientsAllObservations!.id!, ${store.state.appState.userState.patientsAllObservations!.id!}');
+              filteredObservations = store.state.appState.userState.patientsAllObservations!.observations!;
+          }
+        }
       },
       converter: (appState) => appState.state.appState.userState,
       builder: (context, userState) {
@@ -135,9 +133,9 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
       const EdgeInsets.all(16),
       child:
         Column(children: [
-          // Search input
               CustomSearchInput(
-                    onSearchChanged: updateFilteredObservations,
+                readOnly: userState.patientsAllObservations!.observations == null,
+                    onSearchChanged: userState.patientsAllObservations!.observations == null ? (String value) {print('null');} : updateFilteredObservations,
                   ),
     const SizedBox(height: 16),
 
@@ -156,7 +154,8 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
                 backgroundColor: Color(0xFFC3C3C3), // Change the background color
               ),
             ) :
-
+            
+            filteredObservations.isNotEmpty ?
 
   GridView.builder(
     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -174,18 +173,18 @@ class _ObservationsScreenState extends State<ObservationsScreen> {
                         labelText: labelText,
                         isApproved: filteredObservations[index].conclusion!.isApproved!,
                         onTap: () {
-                          showObservation(filteredObservations[index]); // Use filteredObservations
+                          showObservation(filteredObservations[index]);
                         },
                       );
-    },
-  ),
+      } 
+  ) :
+        Center(child: Text("No data", style: TextStyle(color: Colors.white,),)),
   ),
   ),
         ],)
       );
   }
     ),
-      // ),
     );
   }
 }

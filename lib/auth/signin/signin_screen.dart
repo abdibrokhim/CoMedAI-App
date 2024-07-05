@@ -36,9 +36,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
+    initErrors();
+    
     super.initState();
 
-    initErrors();
   }
 
   void addError({required String error}) {
@@ -91,6 +92,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 31, 33, 38),
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
           'Sign In',
             style: const TextStyle(

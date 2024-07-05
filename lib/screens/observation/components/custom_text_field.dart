@@ -25,8 +25,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   void initState() {
-    super.initState();
     _controller = TextEditingController(text: widget.initialValue);
+    super.initState();
   }
 
   @override
