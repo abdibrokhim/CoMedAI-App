@@ -11,23 +11,17 @@ import 'package:brainmri/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:brainmri/models/observation_model.dart';
-import 'package:brainmri/screens/user/user_reducer.dart';
-import 'package:brainmri/store/env.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:brainmri/models/conclusion_model.dart';
 import 'package:brainmri/models/patients_model.dart';
 import 'package:brainmri/store/app_logs.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 
 class UserService {
