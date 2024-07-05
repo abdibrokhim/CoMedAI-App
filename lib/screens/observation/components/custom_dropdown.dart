@@ -95,11 +95,18 @@ class _CustomDropdownWithSearchState extends State<CustomDropdownWithSearch> {
   Widget build(BuildContext context) {
     return StoreConnector<GlobalState, UserState>(
         onInit: (store) async {
-        store.dispatch(FetchAllPatientNamesAction());
-        final List<Map<String, String>> data = StoreProvider.of<GlobalState>(context).state.appState.userState.patientNames;
-        setState(() {
-          filteredData = data.map((e) => e['name']!).toList();
-        });
+         if (widget.dState == 0) {
+
+      store.dispatch(FetchAllPatientNamesAction());
+      final List<Map<String, String>> data = store.state.appState.userState.patientNames;
+      setState(() {
+        filteredData = data.map((e) => e['name']!).toList();
+      });
+          } else {
+            setState(() {
+              filteredData = types.map((e) => e['name']!).toList();
+            });
+          }
       },
       converter: (appState) => appState.state.appState.userState,
       builder: (context, userState) {
@@ -183,6 +190,15 @@ class _CustomDropdownWithSearchState extends State<CustomDropdownWithSearch> {
         child: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
+            if (searchController.text.isEmpty) {
+                                                                if (widget.dState == 0) {
+                          StoreProvider.of<GlobalState>(context).dispatch(SelectPatientAction(selected));
+                        }
+                        if (widget.dState == 1) {
+                          StoreProvider.of<GlobalState>(context).dispatch(SelectObservationTypeAction(selected));
+                        }
+            }
+            
           },
           icon: Icon(Icons.close, color: Colors.black, size: 18,),
         ),
@@ -233,6 +249,12 @@ suffixIcon: searchController.text.isNotEmpty
                           setState(() {
                             selected = {};
                           });
+                                                  if (widget.dState == 0) {
+                          StoreProvider.of<GlobalState>(context).dispatch(SelectPatientAction(selected));
+                        }
+                        if (widget.dState == 1) {
+                          StoreProvider.of<GlobalState>(context).dispatch(SelectObservationTypeAction(selected));
+                        }
                         },
                         icon: Icon(
                           Icons.clear,

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:brainmri/auth/components/secure_storage.dart';
 import 'package:brainmri/models/chat_messages_model.dart';
 import 'package:brainmri/screens/profile/organization_model.dart';
+import 'package:brainmri/store/app_store.dart';
 import 'package:brainmri/utils/constants.dart';
 import 'package:brainmri/utils/shared.dart';
 import 'package:brainmri/utils/toast.dart';
@@ -529,16 +530,19 @@ class UserService {
 
 
 static Future<String> generatePatientReport(String pId, String pName, String bYear, ObservationModel observation) async {
+
+  final OrganizationModel org = store.state.appState.userState.organization!;
+
   try {
     print('Generating patient report: ${pName}');
 
     
-    String hospitalName = 'SI "REPUBLICAN SPECIALIZED CENTER FOR SURGERY NAMED AFTER ACADEMICIAN V. VAKHIDOV"';
-    String mriDepartment = 'DEPARTMENT OF MAGNETIC RESONANCE AND COMPUTED TOMOGRAPHY';
-    String phoneNumber = '+1234567890';
+    String hospitalName = org.fullName ?? 'SI "REPUBLICAN SPECIALIZED CENTER FOR SURGERY NAMED AFTER ACADEMICIAN V. VAKHIDOV"';
+    String mriDepartment = org.departmentName ?? 'DEPARTMENT OF MAGNETIC RESONANCE AND COMPUTED TOMOGRAPHY';
+    String phoneNumber = org.phoneNumber ?? '+1234567890';
+    String address = org.fullAddress ?? 'Uzbekistan, Tashkent, ul. Farkhadskaya 10. Phone: ${phoneNumber}';
     String disclaimerA = 'This conclusion is not a final diagnosis and requires comparison with clinical and laboratory data.';
     String disclaimerB = 'In case of typos, contact phone: ${phoneNumber}';
-    String address = 'Uzbekistan, Tashkent, ul. Farkhadskaya 10. Phone: ${phoneNumber}';
 
 
     final pdf = pw.Document();

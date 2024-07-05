@@ -590,6 +590,8 @@ UserState reinitializeFormReducer(
     UserState state, ReinitializeFormAction action) {
   return state.copyWith(
     brainObservation: BrainObservationModel.initial(),
+    selectedOType: {},
+    selectedPatient: {},
     errors: [],
     isLoading: false,
     isApprovingConclusion: false,

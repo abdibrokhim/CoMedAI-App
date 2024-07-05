@@ -72,6 +72,9 @@ int calculateLines(String text) {
 
   var state = StoreProvider.of<GlobalState>(context).state.appState.userState;
 
+  print('state.selectedOType: ${state.selectedOType}');
+  print('state.selectedPatient: ${state.selectedPatient}');
+
   // Add errors to list
   if(state.selectedOType.isEmpty) {
     addError(error: 'Selecting a scan type is required');
@@ -265,7 +268,10 @@ if (errors.isNotEmpty) {  // remove '!' in production
 
   // on simulate pre fill the form with template data
   void _reInitializeMainForm() {
+    var state = store.state.appState.userState;
     setState(() {
+      StoreProvider.of<GlobalState>(context).dispatch(SelectPatientAction({}));
+      StoreProvider.of<GlobalState>(context).dispatch(SelectObservationTypeAction({}));
       observation = BrainObservationModel();
       radiologistNameController = TextEditingController();
       newPatientNameController = TextEditingController();
@@ -596,7 +602,7 @@ if (errors.isNotEmpty) {
 }
 
   void _submitForm() {
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
 
 
     print('submitting form');
@@ -632,9 +638,11 @@ if (errors.isNotEmpty) {
     StoreProvider.of<GlobalState>(context).dispatch(
       SavePatientObservationAction(state.selectedPatient['id']! , newOb),
     );
+    Navigator.of(context).pop();
+    _reInitializeMainForm();
+
         }
 
-    // Navigator.of(context).pop();
   }
 
       void reFetchData()  {
@@ -665,8 +673,17 @@ if (errors.isNotEmpty) {
     return 
     StoreConnector<GlobalState, UserState>(
       onInit: (store) {
-        _reInitializeMainForm();
+        // _reInitializeMainForm();
         // store.dispatch(FetchAllPatientNamesAction());
+              StoreProvider.of<GlobalState>(context).dispatch(SelectPatientAction({}));
+              StoreProvider.of<GlobalState>(context).dispatch(SelectObservationTypeAction({}));
+              observation = BrainObservationModel();
+              radiologistNameController = TextEditingController();
+              newPatientNameController = TextEditingController();
+              birthYearController = TextEditingController();
+              
+              StoreProvider.of<GlobalState>(context).dispatch(FetchOrganizationAction());
+              print('fetching organization _BrainObservationFormState: ${store.state.appState.userState.organization}');
       },
       converter: (appState) => appState.state.appState.userState,
       builder: (context, userState) {

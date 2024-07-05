@@ -9,6 +9,7 @@ class OrganizationModel {
     this.name,
     this.email,
     this.fullName,
+    this.departmentName,
     this.phoneNumber,
     this.fullAddress,
   });
@@ -19,6 +20,7 @@ factory OrganizationModel.fromJson(Map<dynamic, dynamic> json) {
     name: json['name'],
     email: json['email'],
     fullName: json['fullName'] ?? '',
+    departmentName: json['departmentName'] ?? '',
     phoneNumber: json['phoneNumber'] ?? '',
     fullAddress: json['fullAddress'] ?? '',
   );
@@ -27,6 +29,7 @@ factory OrganizationModel.fromJson(Map<dynamic, dynamic> json) {
   String? name;
   String? email;
   String? fullName;
+  String? departmentName;
   String? phoneNumber;
   String? fullAddress;
 
@@ -35,6 +38,7 @@ factory OrganizationModel.fromJson(Map<dynamic, dynamic> json) {
     String? name,
     String? email,
     String? fullName,
+    String? departmentName,
     String? phoneNumber,
     String? fullAddress,
   }) {
@@ -43,6 +47,7 @@ factory OrganizationModel.fromJson(Map<dynamic, dynamic> json) {
       name: name ?? this.name,
       email: email ?? this.email,
       fullName: fullName ?? this.fullName,
+      departmentName: departmentName ?? this.departmentName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       fullAddress: fullAddress ?? this.fullAddress,
     );
@@ -54,6 +59,7 @@ factory OrganizationModel.fromJson(Map<dynamic, dynamic> json) {
       'name': name,
       'email': email,
       'fullName': fullName,
+      'departmentName': departmentName,
       'phoneNumber': phoneNumber,
       'fullAddress': fullAddress,
     };

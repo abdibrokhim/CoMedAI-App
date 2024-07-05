@@ -138,11 +138,13 @@ print('Updating ${name}...');
           SaveOrganizationDetailsAction(
             updatedOrganization.copyWith(
               fullName: toUpdate == 0 ? _dController.text : o.fullName,
+              departmentName: toUpdate == 3 ? _dController.text : o.departmentName,
               phoneNumber: toUpdate == 1 ? _dController.text : o.phoneNumber,
               fullAddress: toUpdate == 2 ? _dController.text : o.fullAddress,
             ),
           ),
         );
+        Navigator.of(context).pop();
         }
 
   },
@@ -200,6 +202,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   // OrganizationModel organization = OrganizationModel();
 
     String fullName = '';
+    String dFullName = '';
     String phoneNumber = '';
     String fullAddress = '';
     String displayName = 'No name';
@@ -230,6 +233,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
         // }
         if (state.appState.userState.organization!.fullName != null) {
           fullName = state.appState.userState.organization!.fullName!;
+        }
+        if (state.appState.userState.organization!.departmentName != null) {
+          dFullName = state.appState.userState.organization!.departmentName!;
         }
         if (state.appState.userState.organization!.phoneNumber != null) {
           phoneNumber = state.appState.userState.organization!.phoneNumber!;
@@ -284,6 +290,7 @@ StoreConnector<GlobalState, UserState>(
       print('store.state.appState.userState.organization!.name: ${store.state.appState.userState.organization!.name}');
       print('store.state.appState.userState.organization!.email: ${store.state.appState.userState.organization!.email}');
       print('store.state.appState.userState.organization!.fullName: ${store.state.appState.userState.organization!.fullName}');
+      print('store.state.appState.userState.organization!.departmentName: ${store.state.appState.userState.organization!.departmentName}');
       print('store.state.appState.userState.organization!.phoneNumber: ${store.state.appState.userState.organization!.phoneNumber}');
       print('store.state.appState.userState.organization!.fullAddress: ${store.state.appState.userState.organization!.fullAddress}');
     }
@@ -293,6 +300,9 @@ StoreConnector<GlobalState, UserState>(
         }
             if (state.appState.userState.organization!.fullName != null) {
           fullName = state.appState.userState.organization!.fullName!;
+        }
+        if (state.appState.userState.organization!.departmentName != null) {
+          dFullName = state.appState.userState.organization!.departmentName!;
         }
                 if (state.appState.userState.organization!.phoneNumber != null) {
           phoneNumber = state.appState.userState.organization!.phoneNumber!;
@@ -396,12 +406,22 @@ StoreConnector<GlobalState, UserState>(
         // form
         const SizedBox(height: 16.0),
         CustomTextField(
-  labelText: 'Full name (tap to edit)',
+  labelText: 'Organization fullname (tap to edit)',
   initialValue: fullName,
   maxLines: fullName.isEmpty ? 1 : calculateLines(context, fullName),
   onTap: () {
     final int toUpdate = 0;
-    showEditBottomSheet(context, fullName, fullName.isEmpty ? 1 : calculateLines(context, fullName), toUpdate, 'Full Name');
+    showEditBottomSheet(context, fullName, fullName.isEmpty ? 1 : calculateLines(context, fullName), toUpdate, 'Organization fullname');
+  },
+),
+  const SizedBox(height: 24.0),
+        CustomTextField(
+  labelText: 'Department fullname (tap to edit)',
+  initialValue: dFullName,
+  maxLines: dFullName.isEmpty ? 1 : calculateLines(context, dFullName),
+  onTap: () {
+    final int toUpdate = 3;
+    showEditBottomSheet(context, dFullName, dFullName.isEmpty ? 1 : calculateLines(context, dFullName), toUpdate, 'Department fullname');
   },
 ),
   const SizedBox(height: 24.0),
@@ -411,17 +431,17 @@ StoreConnector<GlobalState, UserState>(
   maxLines: phoneNumber.isEmpty ? 1 : calculateLines(context, phoneNumber),
   onTap: () {
     final int toUpdate = 1;
-    showEditBottomSheet(context, phoneNumber, phoneNumber.isEmpty ? 1 : calculateLines(context, phoneNumber), toUpdate, 'Phone Number');
+    showEditBottomSheet(context, phoneNumber, phoneNumber.isEmpty ? 1 : calculateLines(context, phoneNumber), toUpdate, 'Phone number');
   },
 ),
   const SizedBox(height: 24.0),
         CustomTextField(
-  labelText: 'Full Address (tap to edit)',
+  labelText: 'Full address (tap to edit)',
   initialValue: fullAddress,
   maxLines: fullAddress.isEmpty ? 1 : calculateLines(context, fullAddress),
   onTap: () {
     final int toUpdate = 2;
-    showEditBottomSheet(context, fullAddress, fullAddress.isEmpty ? 1 : calculateLines(context, fullAddress), toUpdate, 'Full Address');
+    showEditBottomSheet(context, fullAddress, fullAddress.isEmpty ? 1 : calculateLines(context, fullAddress), toUpdate, 'Full address');
   },
 ),
   const SizedBox(height: 40.0),

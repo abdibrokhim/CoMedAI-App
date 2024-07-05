@@ -3,8 +3,10 @@ import 'package:brainmri/models/patients_model.dart';
 import 'package:brainmri/screens/observation/components/custom_text_field.dart';
 import 'package:brainmri/screens/observation/components/custom_textformfield.dart';
 import 'package:brainmri/screens/observation/components/primary_custom_button.dart';
+import 'package:brainmri/screens/profile/organization_model.dart';
 import 'package:brainmri/screens/user/user_reducer.dart';
 import 'package:brainmri/store/app_store.dart';
+import 'package:brainmri/utils/constants.dart';
 import 'package:brainmri/utils/refreshable.dart';
 import 'package:brainmri/utils/shared.dart';
 import 'package:brainmri/utils/toast.dart';
@@ -144,6 +146,10 @@ print('Updating conclusion...');
           StoreProvider.of<GlobalState>(context).dispatch(FetchPatientSingleObservation(paId, obId));
           print('SingleObservationBottomSheet updated(): ${store.state.appState.userState.patientsAllObservations!.id!}');
         });
+
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        showToast(message: "Refresh the screen to see the changes.", bgColor: Colors.green[900]);
 
       // reFetchData();
 
@@ -335,7 +341,7 @@ CustomTextField(
   initialValue: observation.conclusion!.isApproved! ? 'Approved' : 'Pending',
   maxLines: 1,
   onTap: () {
-    showConfirmationBottomSheet(context, observation, pId, reFetchData);
+    showConfirmationBottomSheet(context, observation, pId);
   },
 ),
 
@@ -362,12 +368,23 @@ CustomTextField(
         // SimulateGenerateReport(),
     //   );
 
+    if (store.state.appState.userState.organization != null) {
+      OrganizationModel org = store.state.appState.userState.organization!;
 
-    store.dispatch(
-        GenerateReportAction(pId, pName, bYear, observation),
-      );
+      if (org.fullName!.isNotEmpty && org.departmentName!.isNotEmpty && org.fullAddress!.isNotEmpty && org.phoneNumber!.isNotEmpty) {
+        store.dispatch(
+            GenerateReportAction(pId, pName, bYear, observation),
+          );
 
-    showReportActionBottomSheet(context);
+        showReportActionBottomSheet(context);
+      } else {
+        showToast(message: "Go to Organization and fill out the details. Then try again.", bgColor: getColor(AppColors.error));
+      }
+
+    }
+
+
+
 
     }
   },
@@ -456,7 +473,7 @@ const SizedBox(height: 60.0),
 }
 
 
-  void showConfirmationBottomSheet(BuildContext context, ObservationModel observation, String pId, void Function() reFetchData) {
+  void showConfirmationBottomSheet(BuildContext context, ObservationModel observation, String pId) {
 
     final bool isApproved = observation.conclusion!.isApproved!;
     final TextEditingController _dController = TextEditingController();
@@ -568,8 +585,9 @@ print('Approving conclusion...');
         ApprovePatientConclusionAction(pId, observation.id!, _dController.text),
       );
       
-      reFetchData();
-
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      showToast(message: "Refresh the screen to see the changes.", bgColor: Colors.green[900]);
         }
 
   },
@@ -694,7 +712,7 @@ const SizedBox(height: 16),
           IconButton(
             onPressed: () {
               List<String> content = [
-                'If you generated report successfully, but could not Download it, please refresh the screen and try again.',
+                'If you generated report successfully, but could not Download it, please refresh the screen.',
                 'You may click on Download last report to download the last generated report.',
                 'Updates may take a few seconds to reflect. Usually from 5 to 10 seconds.',
               ];
