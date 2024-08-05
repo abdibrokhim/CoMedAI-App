@@ -26,23 +26,7 @@ soon...
 ### External Links
 * Read more about me [click](https://abdibrokhim.vercel.app/about)
 
-* Business plan [click](https://docs.google.com/document/d/14TLvDCRngngKVOAUVtyN1rM72EuXAzRddkghH7VxSUs/edit?usp=sharing)
-
-* Here is App screenshots [click](https://drive.google.com/drive/folders/1kGS9eK2R-pjRluigFqNDTp_uoo09MNmG?usp=sharing)
-
-* Here is presentation slides [click](https://docs.google.com/document/d/1BUTYwI5xuNIV0FWmmQNmMErs6XXK30kDKoojktSwoJU/edit?usp=sharing) 
-
-* Here is pitch video on YouTube [click](https://youtu.be/769mUZFG3Ag)
-
-* Live Demo from Founder [click](https://drive.google.com/file/d/1SLdkSl7yR-agug86J13cpvEn3Mrn6cC1/view?usp=sharing) 
-
-* Live Demo from Founder on YouTube [click]()
-
-* Testimonial (user tried and LOVED) [click]()
-
-* Check the official Github repository for a detailed overview of MeWellAI [click](https://github.com/abdibrokhim/CoMedAI-App/blob/main/README.md)
-
-* Download APK [click](https://docs.google.com/document/d/14oVkMf3fzjG3X07ATD1yB6dZhXxcEdBgYX2bJlXu84U/edit?usp=sharing)
+* Full information available [click](https://docs.google.com/document/d/1BUTYwI5xuNIV0FWmmQNmMErs6XXK30kDKoojktSwoJU/edit?usp=sharing)
 
 ### What's next? 
 
@@ -105,7 +89,7 @@ soon...
 ### How CoMedAI may benefit humanity (YOU)? 💫
 - soon...
 
-Better check the presentation [click]()
+Better check the comprehensive overview [click](https://docs.google.com/document/d/1BUTYwI5xuNIV0FWmmQNmMErs6XXK30kDKoojktSwoJU/edit?usp=sharing)
 
 Read the full story [click](https://github.com/abdibrokhim/CoMedAI-App/blob/main/STORY.md) (if you haven't yet)
 
@@ -121,7 +105,7 @@ Download the latest APK from [here](https://docs.google.com/document/d/14oVkMf3f
 API Backend Services source code is available [here](https://github.com/abdibrokhim/CoMedAI-Model-API)
 
 
-### How to use MeWellAI? 👀 
+### How to use CoMedAI? 👀 
 Check the [INSTRUCTIONS.md](https://github.com/abdibrokhim/CoMedAI-App/blob/main/INSTRUCTIONS.md) file for detailed instructions on how to use MeWellAI.
 
 ### New to Flutter? 🙃
